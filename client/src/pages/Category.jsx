@@ -1,9 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Quiz = () => {
-  const [dataState, setDataState] = useState([]);
+const Categories = () => {
+  const [dataState, setDataState] = useState([])
   const [selectedCategory, setSelectedCategory] = useState("9");
+  const navigate = useNavigate();
 
+
+
+  
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (selectedCategory) {
@@ -16,61 +21,45 @@ const Quiz = () => {
           console.log(data);
           const trimData = data.results.map((item) => {
             let trimmedCorrect = atob(item.correct_answer);
-
             let trimmedIncorrect = item.incorrect_answers.map((wrongTrim) => {
               wrongTrim = atob(wrongTrim);
-
               return wrongTrim;
             });
             const options = trimmedIncorrect;
             options.push(trimmedCorrect);
 
+            const shuffledOptions = [...options];
+            for (let i = shuffledOptions.length - 1; i > 0; i--) {
+              const j = Math.floor(Math.random() * (i + 1));
+              [shuffledOptions[i], shuffledOptions[j]] = [
+                shuffledOptions[j],
+                shuffledOptions[i],
+              ];
+            }
+
+
             let trimmedQuestion = atob(item.question);
             console.log(trimmedQuestion);
-
             return {
               question: trimmedQuestion,
               correctAnswer: trimmedCorrect,
-              options: options,
+              options: shuffledOptions,
             };
+        
           });
-          setDataState([...trimData]);
+          setDataState([...trimData])
+
+          navigate("/quiz-alt", {
+            state: { category: selectedCategory, questions: trimData },
+          });
         });
     }
   };
 
+
+
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
-  };
-
-  const renderQuestions = () => {
-    return dataState.map((item, index) => {
-      const shuffledOptions = [...item.options];
-      for (let i = shuffledOptions.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffledOptions[i], shuffledOptions[j]] = [
-          shuffledOptions[j],
-          shuffledOptions[i],
-        ];
-      }
-
-      return (
-        <div key={index}>
-          <h3>{item.question}</h3>
-          {shuffledOptions.map((choice, choiceIndex) => (
-            <div key={choiceIndex}>
-              <input
-                type="radio"
-                id={`answer-${index}-${choiceIndex}`}
-                name={`answer-${index}`}
-                value={`${choice}`}
-              />
-              <label htmlFor={`answer-${index}-${choiceIndex}`}>{choice}</label>
-            </div>
-          ))}
-        </div>
-      );
-    });
   };
 
   return (
@@ -79,7 +68,8 @@ const Quiz = () => {
         handleFormSubmit(e);
       }}
     >
-      <label htmlFor="category-select">Select a Category:</label>
+      <h3 className="tctr">Select a Category:</h3>
+      <label htmlFor="category-select"></label>
       <select
         id="category-select"
         onChange={handleCategoryChange}
@@ -90,8 +80,8 @@ const Quiz = () => {
         <option value="21">Sports</option>
         <option value="22">Geography</option>
         <option value="23">History</option>
-        <option value="24">Politics</option>
-        <option value="25">Art</option>
+        {/* <option value="24">Politics</option> //THESE TWO DON'T WORK
+        <option value="25">Art</option> */}
         <option value="26">Celebrities</option>
         <option value="27">Animals</option>
         <option value="28">Vehicles</option>
@@ -100,9 +90,8 @@ const Quiz = () => {
       submit button needs conditional logic to createHighscore if dataState && userChoices exist
       maybe button can link to user highscore page on submit */}
       <button type="submit">Submit</button>
-      {dataState.length > 0 && renderQuestions()}
     </form>
   );
 };
 
-export default Quiz;
+export default Categories;
