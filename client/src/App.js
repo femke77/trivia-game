@@ -12,7 +12,7 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import myImage from "./Trivia.png";
+import myImage from "./assets/Trivia.png";
 
 import Quiz from "./pages/Quiz";
 
