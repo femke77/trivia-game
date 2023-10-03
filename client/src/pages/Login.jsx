@@ -59,7 +59,7 @@ function Login() {
         {error ? (
           <div>
             <p className="error-text">The provided credentials are incorrect</p>
-           <p>{error.message}</p>
+           {/* <p>{error.message}</p> */}
           </div>
         ) : null}
         <div className="flex-row flex-end">

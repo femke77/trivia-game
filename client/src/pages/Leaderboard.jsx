@@ -12,7 +12,7 @@ export default function Leaderboard() {
   };
 
   return (
-    <>
+    <div className="lb">
       <h1>Leaderboard</h1>
 
       <div className="hs tctr">
@@ -37,6 +37,6 @@ export default function Leaderboard() {
       <button className="btn" onClick={playAgain}>
         Play Again
       </button>
-    </>
+    </div>
   );
 }

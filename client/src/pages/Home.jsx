@@ -1,19 +1,18 @@
 import React from 'react';
-import Login from './login';
+import Login from './Login.jsx';
 import Auth from '../utils/auth';
 import '../../src/index.css';
-import myImage from '../../src/Trivia.png';
 import Categories from './Category';
 
 
 function Home() {
   const loggedIn = Auth.loggedIn();
   return (
-    <div>
+    <>
       <h1>Welcome to the Triva App!!!</h1>
-      <img src={myImage} alt="Triva Logo" />
+
       {!loggedIn ? <Login  /> : <div className="clform" ><Categories/></div>}
-    </div>
+    </>
   );
 }
 

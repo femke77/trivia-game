@@ -58,7 +58,7 @@ export default function Quiz() {
 
   return (
     <div className="app">
-      <img src={myImage} alt="Triva Logo" />
+
       {showScore ? (
         <h3 className="score-section">
           You scored {score} out of {questions.length}! <br />

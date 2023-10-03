@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useMutation } from '@apollo/client';
 import Auth from '../utils/auth';
 import { ADD_USER } from '../utils/mutations';
-import { Button, Spinner } from '@chakra-ui/react';
+import { Button } from '@chakra-ui/react';
 import '../../src/index.css';
 
 
@@ -107,6 +107,12 @@ function Signup(props) {
             value={formState.userName}
           />
         </div>
+        {error ? (
+          <div>
+            <p className="error-text">There was a problem with your signup.</p>
+           <p>{error.message}</p>
+          </div>
+        ) : null}
         <div  className="flex-row flex-end">
           <Button
             type="submit"

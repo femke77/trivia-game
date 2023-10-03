@@ -2,13 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Categories = () => {
-  const [dataState, setDataState] = useState([])
+  const [dataState, setDataState] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("9");
   const navigate = useNavigate();
 
-
-
-  
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (selectedCategory) {
@@ -18,16 +15,36 @@ const Categories = () => {
       fetch(requestUrl)
         .then((response) => response.json())
         .then((data) => {
-          console.log(data);
+        
           const trimData = data.results.map((item) => {
+
+            // decode the question
+            let trimmedQuestion = atob(item.question);
+            let b2bQues = Uint8Array.from(trimmedQuestion, (m) =>
+              m.codePointAt(0)
+            );
+            let decodedB2BQ = new TextDecoder().decode(b2bQues);
+
+            // decode correct answer
             let trimmedCorrect = atob(item.correct_answer);
+            let b2bTrimmedCorrect = Uint8Array.from(trimmedCorrect, (m) =>
+              m.codePointAt(0)
+            );
+            let decodedB2BATC = new TextDecoder().decode(b2bTrimmedCorrect);
+
+            // decode all the incorrect answers
             let trimmedIncorrect = item.incorrect_answers.map((wrongTrim) => {
               wrongTrim = atob(wrongTrim);
-              return wrongTrim;
+              let b2bWrongTrim = Uint8Array.from(wrongTrim, (m) =>
+                m.codePointAt(0)
+              );
+              let decodedB2BA = new TextDecoder().decode(b2bWrongTrim);
+              return decodedB2BA;
             });
             const options = trimmedIncorrect;
-            options.push(trimmedCorrect);
+            options.push(decodedB2BATC);
 
+            // shuffle the positions of the answer options
             const shuffledOptions = [...options];
             for (let i = shuffledOptions.length - 1; i > 0; i--) {
               const j = Math.floor(Math.random() * (i + 1));
@@ -37,26 +54,20 @@ const Categories = () => {
               ];
             }
 
-
-            let trimmedQuestion = atob(item.question);
-            console.log(trimmedQuestion);
             return {
-              question: trimmedQuestion,
-              correctAnswer: trimmedCorrect,
+              question: decodedB2BQ,
+              correctAnswer: decodedB2BATC,
               options: shuffledOptions,
             };
-        
           });
-          setDataState([...trimData])
+          setDataState([...trimData]);
 
-          navigate("/quiz-alt", {
+          navigate("/quiz", {
             state: { category: selectedCategory, questions: trimData },
           });
         });
     }
   };
-
-
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
@@ -80,15 +91,10 @@ const Categories = () => {
         <option value="21">Sports</option>
         <option value="22">Geography</option>
         <option value="23">History</option>
-        {/* <option value="24">Politics</option> //THESE TWO DON'T WORK
-        <option value="25">Art</option> */}
         <option value="26">Celebrities</option>
         <option value="27">Animals</option>
         <option value="28">Vehicles</option>
       </select>
-      {/* add submit button - move renderQuentions into submit button
-      submit button needs conditional logic to createHighscore if dataState && userChoices exist
-      maybe button can link to user highscore page on submit */}
       <button type="submit">Submit</button>
     </form>
   );
