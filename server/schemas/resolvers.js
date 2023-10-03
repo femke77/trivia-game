@@ -32,17 +32,17 @@ const resolvers = {
             return { token, user };
         },
         login: async (parent, { email, password }) => {
-            console.log(password)
+        
             const user = await User.findOne({ email });
 
             if (!user) {
                 throw new AuthenticationError('Incorrect credentials');
             }
-            console.log()
+
             const correctPw = await bcrypt.compare(password, user.password);
 
             if (!correctPw) {
-                throw new AuthenticationError('Incorrect credentials PW');
+                throw new AuthenticationError('Incorrect credentials');
             }
 
             const token = signToken(user);

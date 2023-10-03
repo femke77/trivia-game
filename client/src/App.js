@@ -1,21 +1,30 @@
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+// import Home from '../src/pages/homepage';
 
 
-import React from 'react';
-import { Routes, Route } from 'react-router-dom'; 
-import Home from '../src/pages/homepage';
-import Quiz from '../src/pages/quizpage';
-import Highscores from '../src/pages/highscores';
-import Signup from '../src/pages/signup';
-import Login from '../src/pages/login';
-import { ApolloClient, InMemoryCache, ApolloProvider, createHttpLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context'
+import Signup from "../src/pages/Signup.jsx";
+import Login from "../src/pages/Login.jsx";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import myImage from "./Trivia.png";
+
+import Quiz from "./pages/Quiz";
+
+import Home from "./pages/Home";
+import Leaderboard from "./pages/Leaderboard";
 
 const httpLink = createHttpLink({
-  uri: '/graphql'
+  uri: "/graphql",
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('id_token');
+  const token = localStorage.getItem("id_token");
 
   return {
     headers: {
@@ -33,15 +42,19 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-    <div>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/quiz" element={<Quiz />} />
-        <Route path="/highscores" element={<Highscores />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </div>
+      <div className="logo">
+        <img src={myImage} alt="Triva Logo" />
+      </div>
+      <div className="tctr">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/quiz" element={<Quiz />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/leaderboard" element={<Leaderboard />} />
+        </Routes>
+      </div>
     </ApolloProvider>
   );
 }
