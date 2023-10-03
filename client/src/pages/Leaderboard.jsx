@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 export default function Leaderboard() {
   const { data, loading, error } = useQuery(GET_HIGHSCORES);
   const highscores = data?.highscores || [];
-  console.log(highscores);
+
   
   if (loading) return <h2>Loading...</h2>;
 
