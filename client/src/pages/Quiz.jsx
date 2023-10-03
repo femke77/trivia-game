@@ -8,26 +8,18 @@ export default function Quiz() {
   const { state } = useLocation();
   const { questions, category } = state;
 
-  const stateRef = useRef();
+  const stateRef = useRef(0);
   const navigate = useNavigate();
   const [addScore, { error }] = useMutation(SAVE_SCORE);
 
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showScore, setShowScore] = useState(false);
-  const [score, setScore] = useState(0);
-  stateRef.current = score;
-
 
   const endQuiz = () => {
-    console.log("inside of endquiz ", stateRef.current, score);
-    setTimeout(() => {
-      // useref is not really updated before this gets called (async issue i think, not sure)
-      // but is updated after small delay. 
-      // score is simply just stale and remains so even after delay
-      // set timeout seems ok fix because I have a desired, longer delay anyway.
-      console.log("inside 1 sec timeout: ", stateRef.current, score);
-      handleScoreSubmit();
-    }, 1000);
+    console.log("inside of endquiz ", stateRef.current);
+
+    handleScoreSubmit();
+
     setTimeout(() => {
       navigate("/leaderboard");
     }, 4000);
@@ -35,14 +27,13 @@ export default function Quiz() {
 
   const handleAnswerOptionClick = (option) => {
     if (option === questions[currentQuestion].correctAnswer) {
-      setScore((prevScore) => prevScore + 1);
+      stateRef.current++;
     }
 
     const nextQuestion = currentQuestion + 1;
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
     } else {
-     
       setShowScore(true);
       endQuiz();
     }
@@ -69,7 +60,7 @@ export default function Quiz() {
     <div className="app">
       {showScore ? (
         <h3 className="score-section">
-          You scored {score} out of {questions.length}! <br />
+          You scored {stateRef.current} out of {questions.length}! <br />
           You will now be redirected to the leaderboard.
         </h3>
       ) : (
