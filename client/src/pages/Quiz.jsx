@@ -22,14 +22,15 @@ export default function Quiz() {
     console.log("inside of endquiz ", stateRef.current, score);
     setTimeout(() => {
       // useref is not really updated before this gets called (async issue i think, not sure)
+      // but is updated after small delay. 
       // score is simply just stale and remains so even after delay
-      // set timeout seems ok fix because I have the delay anyway.
+      // set timeout seems ok fix because I have a desired, longer delay anyway.
       console.log("inside 1 sec timeout: ", stateRef.current, score);
       handleScoreSubmit();
     }, 1000);
     setTimeout(() => {
       navigate("/leaderboard");
-    }, 5000);
+    }, 4000);
   };
 
   const handleAnswerOptionClick = (option) => {
