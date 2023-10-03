@@ -7,7 +7,7 @@ import Auth from "../utils/auth";
 export default function Quiz() {
   const { state } = useLocation();
   const { questions, category } = state;
-  console.log(category);
+
   const stateRef = useRef();
   const navigate = useNavigate();
   const [addScore, { error }] = useMutation(SAVE_SCORE);
@@ -16,9 +16,17 @@ export default function Quiz() {
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
   stateRef.current = score;
+  console.log(stateRef.current);
 
   const endQuiz = () => {
-    handleScoreSubmit();
+    console.log("inside of endquiz ", stateRef.current, score);
+    setTimeout(() => {
+      // useref is not really updated before this gets called (async issue i think, not sure)
+      // score is simply just stale and remains so even after delay
+      // set timeout seems ok fix because I have the delay anyway.
+      console.log("inside 1 sec timeout: ", stateRef.current, score);
+      handleScoreSubmit();
+    }, 1000);
     setTimeout(() => {
       navigate("/leaderboard");
     }, 5000);
