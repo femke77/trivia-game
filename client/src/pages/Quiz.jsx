@@ -16,7 +16,7 @@ export default function Quiz() {
   const [showScore, setShowScore] = useState(false);
   const [score, setScore] = useState(0);
   stateRef.current = score;
-  console.log(stateRef.current);
+
 
   const endQuiz = () => {
     console.log("inside of endquiz ", stateRef.current, score);
@@ -42,6 +42,7 @@ export default function Quiz() {
     if (nextQuestion < questions.length) {
       setCurrentQuestion(nextQuestion);
     } else {
+     
       setShowScore(true);
       endQuiz();
     }
