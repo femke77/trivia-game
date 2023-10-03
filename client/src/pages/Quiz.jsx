@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import myImage from "../../src/Trivia.png";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import { SAVE_SCORE } from "../utils/mutations";
@@ -8,7 +7,7 @@ import Auth from "../utils/auth";
 export default function Quiz() {
   const { state } = useLocation();
   const { questions, category } = state;
-
+  console.log(category);
   const stateRef = useRef();
   const navigate = useNavigate();
   const [addScore, { error }] = useMutation(SAVE_SCORE);
@@ -19,8 +18,8 @@ export default function Quiz() {
   stateRef.current = score;
 
   const endQuiz = () => {
+    handleScoreSubmit();
     setTimeout(() => {
-      handleScoreSubmit();
       navigate("/leaderboard");
     }, 5000);
   };
@@ -40,7 +39,7 @@ export default function Quiz() {
   };
 
   const handleScoreSubmit = async () => {
-     if (stateRef.current > 0){
+    if (stateRef.current > 0) {
       const { data } = await addScore({
         variables: {
           category: category,
@@ -58,7 +57,6 @@ export default function Quiz() {
 
   return (
     <div className="app">
-
       {showScore ? (
         <h3 className="score-section">
           You scored {score} out of {questions.length}! <br />
@@ -76,7 +74,10 @@ export default function Quiz() {
           </div>
           <div className="answer-section">
             {questions[currentQuestion].options.map((option, index) => (
-              <button key={index} onClick={() => handleAnswerOptionClick(option)}>
+              <button
+                key={index}
+                onClick={() => handleAnswerOptionClick(option)}
+              >
                 {option}
               </button>
             ))}

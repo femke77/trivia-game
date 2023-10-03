@@ -1,23 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Categories = () => {
-  const [dataState, setDataState] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("9");
+  const [selectedCategory, setSelectedCategory] = useState({
+    id: "9",
+    title: "General Knowledge",
+  });
+
   const navigate = useNavigate();
+  const stateRef = useRef();
+  stateRef.current = selectedCategory;
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (selectedCategory) {
       // Fetch quiz data based on the selected category
-      const requestUrl = `https://opentdb.com/api.php?amount=10&category=${selectedCategory}&difficulty=easy&type=multiple&&encode=base64`;
+      const requestUrl = `https://opentdb.com/api.php?amount=10&category=${selectedCategory.id}&difficulty=easy&type=multiple&&encode=base64`;
 
       fetch(requestUrl)
         .then((response) => response.json())
         .then((data) => {
-        
           const trimData = data.results.map((item) => {
-
             // decode the question
             let trimmedQuestion = atob(item.question);
             let b2bQues = Uint8Array.from(trimmedQuestion, (m) =>
@@ -41,8 +44,7 @@ const Categories = () => {
               let decodedB2BA = new TextDecoder().decode(b2bWrongTrim);
               return decodedB2BA;
             });
-            const options = trimmedIncorrect;
-            options.push(decodedB2BATC);
+            const options = [...trimmedIncorrect, decodedB2BATC];
 
             // shuffle the positions of the answer options
             const shuffledOptions = [...options];
@@ -60,17 +62,19 @@ const Categories = () => {
               options: shuffledOptions,
             };
           });
-          setDataState([...trimData]);
 
           navigate("/quiz", {
-            state: { category: selectedCategory, questions: trimData },
+            state: { category: selectedCategory.title, questions: trimData },
           });
         });
     }
   };
 
   const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
+    setSelectedCategory({
+      id: e.target.value,
+      title: e.target.options[e.target.options.selectedIndex].innerHTML,
+    });
   };
 
   return (
@@ -83,8 +87,9 @@ const Categories = () => {
       <label htmlFor="category-select"></label>
       <select
         id="category-select"
+        name="id"
         onChange={handleCategoryChange}
-        value={selectedCategory}
+        value={selectedCategory.id}
       >
         <option value="9">General Knowledge</option>
         <option value="20">Mythology</option>
