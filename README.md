@@ -5,7 +5,7 @@
   
   ## Description  ✏️
   
-  This is a small trivia app that uses the trivia api
+  This is a small trivia app that uses the open trivia database.
   
   ## Table of Contents 📖
   
@@ -35,10 +35,10 @@
   
   ## Usage 
   
-  Clone the repository, run installation incommand and then run  npm start
+  Clone the repository, run installation command and then run npm start
 
   ### Deployed Link
-  not deployed at this time
+  Not deployed at this time
 
 ### Screenshots
 No screenshots yet.
@@ -46,7 +46,7 @@ No screenshots yet.
 
 
 ## Known Issues 
-None known. Please report anythink you find
+None known. Please report anything you find
 
 ## How To Contribute 
   
@@ -62,6 +62,7 @@ To run tests, run the following command:
 
 
 ## Credits 
+[Open Trivia API](https://opentdb.com/api_config.php)
 
 
  ## Questions 
